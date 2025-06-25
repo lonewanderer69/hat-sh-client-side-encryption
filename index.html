@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hat.sh Clone - Client-side File Encryption</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
+    <div class="flex items-center space-x-3">
+      <img src="https://hat.vercel.app/assets/images/logo.png" alt="Hat.sh Logo" class="h-8 w-8" />
+      <span class="text-sm font-semibold text-gray-600">v2.3.6</span>
+    </div>
+    <nav class="flex items-center space-x-6 text-gray-600 text-sm">
+      <a href="#" class="hover:text-gray-900">About</a>
+      <a href="https://github.com/sh-dv/hat" target="_blank" rel="noopener" aria-label="GitHub Repository" class="hover:text-gray-900">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.997.108-.775.42-1.305.763-1.605-2.665-.3-5.466-1.335-5.466-5.93 0-1.31.47-2.38 1.236-3.22-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 013.003-.404c1.02.005 2.045.138 3.003.404 2.29-1.552 3.296-1.23 3.296-1.23.655 1.653.243 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.807 5.625-5.48 5.92.43.37.823 1.1.823 2.22 0 1.606-.015 2.896-.015 3.286 0 .32.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+      <button aria-label="Settings" class="hover:text-gray-900 focus:outline-none">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.936a7.007 7.007 0 000-1.872l2.036-1.58a.5.5 0 00.12-.63l-1.928-3.34a.5.5 0 00-.607-.22l-2.4.96a6.978 6.978 0 00-1.62-.94l-.36-2.52a.5.5 0 00-.5-.44h-3.856a.5.5 0 00-.5.44l-.36 2.52a6.978 6.978 0 00-1.62.94l-2.4-.96a.5.5 0 00-.607.22l-1.928 3.34a.5.5 0 00.12.63l2.036 1.58a7.007 7.007 0 000 1.872l-2.036 1.58a.5.5 0 00-.12.63l1.928 3.34a.5.5 0 00.607.22l2.4-.96a6.978 6.978 0 001.62.94l.36 2.52a.5.5 0 00.5.44h3.856a.5.5 0 00.5-.44l.36-2.52a6.978 6.978 0 001.62-.94l2.4.96a.5.5 0 00.607-.22l1.928-3.34a.5.5 0 00-.12-.63l-2.036-1.58zM12 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow max-w-3xl mx-auto px-6 py-10">
+    <h1 class="text-3xl font-semibold text-center mb-1">Hat.sh</h1>
+    <p class="text-center text-gray-600 mb-8">Simple, fast, secure client-side file encryption</p>
+
+    <!-- Tabs -->
+    <div class="flex bg-gray-200 rounded-lg overflow-hidden mb-8">
+      <button id="tab-encrypt" class="flex-1 py-2 text-center font-semibold bg-white text-gray-900 rounded-l-lg shadow-sm focus:outline-none" aria-selected="true">Encryption</button>
+      <button id="tab-decrypt" class="flex-1 py-2 text-center font-semibold text-gray-600 rounded-r-lg hover:bg-gray-300 focus:outline-none" aria-selected="false">Decryption</button>
+    </div>
+
+    <!-- Steps -->
+    <div id="encryption-panel" class="space-y-8">
+      <!-- Step 1 -->
+      <div>
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">1</div>
+          <span class="font-semibold text-gray-700">Choose files to encrypt</span>
+        </div>
+        <div id="file-drop-area" class="border-2 border-dashed border-gray-400 rounded-lg p-8 text-center text-gray-500 cursor-pointer hover:border-gray-600 transition">
+          <p class="mb-4">Drag &amp; Drop or Browse files</p>
+          <button id="browse-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded shadow focus:outline-none">Browse Files</button>
+          <input type="file" id="file-input" multiple class="hidden" />
+        </div>
+        <button id="next-btn" disabled class="mt-4 w-full bg-gray-300 text-gray-500 font-semibold py-2 rounded cursor-not-allowed">NEXT</button>
+        <p class="mt-2 text-xs text-gray-500">Files are not uploaded to a server, everything is done offline in your browser.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="step-2" class="hidden">
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">2</div>
+          <span class="font-semibold text-gray-700">Enter a password</span>
+        </div>
+        <input type="password" id="password-input" placeholder="Enter password" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400" />
+      </div>
+
+      <!-- Step 3 -->
+      <div id="step-3" class="hidden">
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">3</div>
+          <span class="font-semibold text-gray-700">Download encrypted files</span>
+        </div>
+        <button id="download-btn" class="w-full bg-gray-700 text-white font-semibold py-2 rounded hover:bg-gray-900 focus:outline-none">Download</button>
+      </div>
+    </div>
+
+    <div id="decryption-panel" class="hidden space-y-8">
+      <!-- Decryption UI will be similar to encryption but with appropriate text -->
+      <div>
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">1</div>
+          <span class="font-semibold text-gray-700">Choose files to decrypt</span>
+        </div>
+        <div id="decrypt-file-drop-area" class="border-2 border-dashed border-gray-400 rounded-lg p-8 text-center text-gray-500 cursor-pointer hover:border-gray-600 transition">
+          <p class="mb-4">Drag &amp; Drop or Browse files</p>
+          <button id="decrypt-browse-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded shadow focus:outline-none">Browse Files</button>
+          <input type="file" id="decrypt-file-input" multiple class="hidden" />
+        </div>
+        <button id="decrypt-next-btn" disabled class="mt-4 w-full bg-gray-300 text-gray-500 font-semibold py-2 rounded cursor-not-allowed">NEXT</button>
+        <p class="mt-2 text-xs text-gray-500">Files are not uploaded to a server, everything is done offline in your browser.</p>
+      </div>
+
+      <div id="decrypt-step-2" class="hidden">
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">2</div>
+          <span class="font-semibold text-gray-700">Enter a password</span>
+        </div>
+        <input type="password" id="decrypt-password-input" placeholder="Enter password" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400" />
+      </div>
+
+      <div id="decrypt-step-3" class="hidden">
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">3</div>
+          <span class="font-semibold text-gray-700">Download decrypted files</span>
+        </div>
+        <button id="decrypt-download-btn" class="w-full bg-gray-700 text-white font-semibold py-2 rounded hover:bg-gray-900 focus:outline-none">Download</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-gray-500 text-sm py-6">
+    Built and developed by sh-dv
+    <button aria-label="Donations Accepted" class="ml-2 inline-flex items-center space-x-1 bg-yellow-400 text-gray-900 font-semibold px-3 py-1 rounded">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1C5.925 1 1 5.925 1 12c0 5.075 3.163 9.39 7.625 11.01.56.103.75-.243.75-.54 0-.27-.01-1.17-.015-2.12-3.1.675-3.75-1.5-3.75-1.5-.5-1.275-1.225-1.615-1.225-1.615-1-.675.075-.66.075-.66 1.1.075 1.675 1.15 1.675 1.15.95 1.625 2.5 1.15 3.125.875.1-.675.375-1.15.675-1.415-2.475-.275-5.075-1.25-5.075-5.55 0-1.225.425-2.225 1.125-3.01-.125-.275-.5-1.375.1-2.875 0 0 .925-.295 3.025 1.125a10.5 10.5 0 015.5 0c2.1-1.42 3.025-1.125 3.025-1.125.6 1.5.225 2.6.1 2.875.7.785 1.125 1.785 1.125 3.01 0 4.3-2.6 5.275-5.1 5.55.4.35.75 1.05.75 2.125 0 1.535-.015 2.775-.015 3.15 0 .3.2.65.75.54C19.85 21.4 23 17.075 23 12c0-6.075-4.925-11-11-11z"/></svg>
+      <span>Donations Accepted</span>
+    </button>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
