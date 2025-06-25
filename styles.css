@@ -1,0 +1,7 @@
+/* Custom styles for Hat.sh clone */
+
+/* Smooth transition for border color on drag & drop */
+#file-drop-area,
+#decrypt-file-drop-area {
+  transition: border-color 0.3s ease;
+}
